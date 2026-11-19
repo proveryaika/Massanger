@@ -4,177 +4,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1c2733">
-  <title>Telegram — макет</title>
+  <title>Telegram</title>
   <style>
     :root {
       color-scheme: dark;
       --background: #1c2733;
       --foreground: #f4f6f8;
-      --muted: #8796a5;
       --surface: #243342;
       --accent: #36a9e8;
     }
-
     * { box-sizing: border-box; }
-
-    html, body {
-      min-height: 100%;
-      margin: 0;
-      background: var(--background);
-      font-family: Roboto, "Segoe UI", Arial, sans-serif;
-    }
-
-    body { color: var(--foreground); }
-
-    .app {
-      min-height: 100vh;
-      width: 100%;
-      background: var(--background);
-    }
-
+    html, body { min-height: 100%; margin: 0; background: var(--background); }
+    body { color: var(--foreground); font-family: Roboto, "Segoe UI", Arial, sans-serif; }
+    .app { min-height: 100vh; width: 100%; background: var(--background); }
     .topbar {
-      min-height: 104px;
+      min-height: 76px;
       display: flex;
       align-items: center;
-      gap: 18px;
-      padding: 20px 28px;
+      gap: 16px;
+      padding: 12px 26px;
     }
-
     .avatar {
-      width: 72px;
-      height: 72px;
-      flex: 0 0 72px;
+      width: 74px;
+      height: 74px;
+      flex: 0 0 74px;
       display: grid;
       place-items: center;
-      border-radius: 50%;
       border: 4px solid #35d17a;
+      border-radius: 50%;
       background: radial-gradient(circle at 35% 30%, #344b55, #07131d 72%);
       box-shadow: inset 0 0 0 2px #0b1720;
       color: #fff;
-      font-size: 19px;
+      font-size: 12px;
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -.5px;
       text-shadow: 0 1px 4px #000;
     }
-
     .brand {
       min-width: 0;
       flex: 1;
       margin: 0;
       color: var(--foreground);
-      font-size: clamp(27px, 5vw, 40px);
+      font-size: 36px;
       line-height: 1;
       font-weight: 700;
       letter-spacing: -.8px;
     }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      margin-left: auto;
-    }
-
+    .actions { display: flex; align-items: center; gap: 18px; margin-left: auto; }
     .icon-button {
-      width: 44px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 0;
-      border-radius: 50%;
-      color: var(--foreground);
-      background: transparent;
-      cursor: pointer;
+      width: 44px; height: 48px; display: grid; place-items: center;
+      padding: 0; border: 0; border-radius: 50%;
+      color: var(--foreground); background: transparent; cursor: pointer;
     }
-
-    .icon-button:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
+    .icon-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
     .icon-button svg {
-      width: 34px;
-      height: 34px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2.6;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 32px; height: 32px; fill: none; stroke: currentColor;
+      stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
     }
-
-    .more svg {
-      width: 30px;
-      height: 30px;
-      stroke: none;
-      fill: currentColor;
-    }
-
-    .search-panel {
-      display: none;
-      padding: 0 28px 18px;
-    }
-
+    .more svg { width: 28px; height: 28px; stroke: none; fill: currentColor; }
+    .search-panel { display: none; padding: 0 26px 16px; }
     .search-panel.is-open { display: block; }
-
     .search-panel input {
-      width: 100%;
-      height: 48px;
-      padding: 0 16px;
-      border: 1px solid #354657;
-      border-radius: 14px;
-      outline: none;
-      color: var(--foreground);
-      background: var(--surface);
-      font: inherit;
-      font-size: 16px;
+      width: 100%; height: 46px; padding: 0 16px;
+      border: 1px solid #354657; border-radius: 14px; outline: none;
+      color: var(--foreground); background: var(--surface); font: inherit; font-size: 16px;
     }
-
     .search-panel input:focus { border-color: var(--accent); }
-
     .menu {
-      position: absolute;
-      top: 88px;
-      right: 18px;
-      display: none;
-      min-width: 170px;
-      padding: 8px;
-      border: 1px solid #344454;
-      border-radius: 14px;
-      background: #263544;
-      box-shadow: 0 10px 28px #0005;
+      position: absolute; top: 72px; right: 18px; display: none;
+      min-width: 170px; padding: 8px; border: 1px solid #344454;
+      border-radius: 14px; background: #263544; box-shadow: 0 10px 28px #0005;
     }
-
     .menu.is-open { display: block; }
-
     .menu button {
-      width: 100%;
-      padding: 12px;
-      border: 0;
-      border-radius: 8px;
-      color: var(--foreground);
-      background: transparent;
-      text-align: left;
-      font: inherit;
+      width: 100%; padding: 12px; border: 0; border-radius: 8px;
+      color: var(--foreground); background: transparent; text-align: left; font: inherit;
     }
-
     .menu button:hover { background: #ffffff12; }
 
-    @media (max-width: 520px) {
-      .topbar { min-height: 88px; gap: 14px; padding: 14px 18px; }
-      .avatar { width: 60px; height: 60px; flex-basis: 60px; font-size: 16px; }
-      .actions { gap: 10px; }
-      .icon-button { width: 38px; }
-      .icon-button svg { width: 30px; height: 30px; }
-      .menu { top: 76px; right: 12px; }
-      .search-panel { padding: 0 18px 16px; }
+    /* Mobile proportions are matched to the supplied Telegram screenshot. */
+    @media (max-width: 600px) {
+      .topbar { min-height: 50px; gap: 12px; padding: 5px 13px; }
+      .avatar {
+        width: 38px; height: 38px; flex-basis: 38px;
+        border-width: 2px; font-size: 7px; letter-spacing: -.3px;
+      }
+      .brand { font-size: 25px; letter-spacing: -.5px; }
+      .actions { gap: 13px; }
+      .icon-button { width: 30px; height: 38px; }
+      .icon-button svg { width: 23px; height: 23px; stroke-width: 2.5; }
+      .more svg { width: 21px; height: 21px; }
+      .search-panel { padding: 0 13px 12px; }
+      .search-panel input { height: 40px; }
+      .menu { top: 52px; right: 10px; }
     }
   </style>
 </head>
 <body>
   <main class="app">
     <header class="topbar" aria-label="Главная панель">
-      <div class="avatar" aria-label="Аватар профиля">R</div>
+      <div class="avatar" aria-label="Аватар профиля">RubUp</div>
       <h1 class="brand">Telegram</h1>
       <div class="actions">
         <button class="icon-button" id="searchToggle" type="button" aria-label="Поиск" aria-expanded="false">
@@ -185,22 +114,18 @@
         </button>
       </div>
     </header>
-
     <div class="search-panel" id="searchPanel">
       <input type="search" placeholder="Поиск" aria-label="Поиск">
     </div>
-
     <nav class="menu" id="menu" aria-label="Дополнительное меню">
       <button type="button" id="closeMenu">Закрыть меню</button>
     </nav>
   </main>
-
   <script>
     const searchToggle = document.getElementById('searchToggle');
     const searchPanel = document.getElementById('searchPanel');
     const menuToggle = document.getElementById('menuToggle');
     const menu = document.getElementById('menu');
-
     searchToggle.addEventListener('click', () => {
       const opened = searchPanel.classList.toggle('is-open');
       searchToggle.setAttribute('aria-expanded', String(opened));
@@ -208,14 +133,12 @@
       menuToggle.setAttribute('aria-expanded', 'false');
       if (opened) searchPanel.querySelector('input').focus();
     });
-
     menuToggle.addEventListener('click', () => {
       const opened = menu.classList.toggle('is-open');
       menuToggle.setAttribute('aria-expanded', String(opened));
       searchPanel.classList.remove('is-open');
       searchToggle.setAttribute('aria-expanded', 'false');
     });
-
     document.getElementById('closeMenu').addEventListener('click', () => {
       menu.classList.remove('is-open');
       menuToggle.setAttribute('aria-expanded', 'false');
