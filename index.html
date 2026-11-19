@@ -2,118 +2,392 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#1c2733">
   <title>Telegram</title>
   <style>
     :root {
       color-scheme: dark;
-      --background: #1c2733;
-      --foreground: #f4f6f8;
-      --surface: #243342;
-      --accent: #36a9e8;
+      --bg: #1c2733;
+      --fg: #f3f5f7;
+      --muted: #81909e;
+      --blue: #36a9e8;
+      --nav: #202f3f;
     }
     * { box-sizing: border-box; }
-    html, body { min-height: 100%; margin: 0; background: var(--background); }
-    body { color: var(--foreground); font-family: Roboto, "Segoe UI", Arial, sans-serif; }
-    .app { min-height: 100vh; width: 100%; background: var(--background); }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      color: var(--fg);
+      font-family: Roboto, "Segoe UI", Arial, sans-serif;
+    }
+    button { font: inherit; color: inherit; }
+    .app {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Telegram top bar */
     .topbar {
-      min-height: 76px;
+      height: 106px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 12px 26px;
+      gap: 12px;
+      padding: 0 26px;
     }
-    .avatar {
-      width: 74px;
-      height: 74px;
-      flex: 0 0 74px;
+    .profile-avatar {
+      width: 76px;
+      height: 76px;
+      flex: 0 0 76px;
       display: grid;
       place-items: center;
-      border: 4px solid #35d17a;
+      border: 3px solid #35d17a;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #344b55, #07131d 72%);
+      background: radial-gradient(circle at 35% 30%, #344b55 0%, #07131d 72%);
       box-shadow: inset 0 0 0 2px #0b1720;
       color: #fff;
       font-size: 12px;
-      font-weight: 800;
-      letter-spacing: -.5px;
-      text-shadow: 0 1px 4px #000;
+      font-weight: 900;
+      letter-spacing: -.6px;
+      text-shadow: 0 1px 3px #000;
     }
     .brand {
-      min-width: 0;
       flex: 1;
+      min-width: 0;
       margin: 0;
-      color: var(--foreground);
       font-size: 36px;
       line-height: 1;
       font-weight: 700;
       letter-spacing: -.8px;
+      white-space: nowrap;
     }
-    .actions { display: flex; align-items: center; gap: 18px; margin-left: auto; }
-    .icon-button {
-      width: 44px; height: 48px; display: grid; place-items: center;
-      padding: 0; border: 0; border-radius: 50%;
-      color: var(--foreground); background: transparent; cursor: pointer;
+    .top-actions { display: flex; align-items: center; gap: 24px; }
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
     }
-    .icon-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-    .icon-button svg {
-      width: 32px; height: 32px; fill: none; stroke: currentColor;
-      stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+    .icon-btn svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
-    .more svg { width: 28px; height: 28px; stroke: none; fill: currentColor; }
-    .search-panel { display: none; padding: 0 26px 16px; }
-    .search-panel.is-open { display: block; }
-    .search-panel input {
-      width: 100%; height: 46px; padding: 0 16px;
-      border: 1px solid #354657; border-radius: 14px; outline: none;
-      color: var(--foreground); background: var(--surface); font: inherit; font-size: 16px;
-    }
-    .search-panel input:focus { border-color: var(--accent); }
-    .menu {
-      position: absolute; top: 72px; right: 18px; display: none;
-      min-width: 170px; padding: 8px; border: 1px solid #344454;
-      border-radius: 14px; background: #263544; box-shadow: 0 10px 28px #0005;
-    }
-    .menu.is-open { display: block; }
-    .menu button {
-      width: 100%; padding: 12px; border: 0; border-radius: 8px;
-      color: var(--foreground); background: transparent; text-align: left; font: inherit;
-    }
-    .menu button:hover { background: #ffffff12; }
+    .more svg { width: 28px; height: 28px; fill: currentColor; stroke: none; }
 
-    /* Mobile proportions are matched to the supplied Telegram screenshot. */
+    /* The currently playing audio strip */
+    .audio-strip {
+      position: relative;
+      height: 82px;
+      margin: 12px 24px 0;
+      padding: 0 26px 3px 34px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      overflow: hidden;
+      border-radius: 44px;
+      background: #243443;
+      box-shadow: inset 0 1px 0 #ffffff08;
+    }
+    .play-pause {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 34px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #69b9ef;
+      font-size: 32px;
+      line-height: 1;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .track {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--fg);
+      font-size: 34px;
+      line-height: 1.15;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .track strong { font-weight: 500; }
+    .track span { color: var(--muted); }
+    .close-audio {
+      flex: 0 0 auto;
+      margin-left: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #81909e;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 300;
+      cursor: pointer;
+    }
+    .progress {
+      position: absolute;
+      left: 24px;
+      bottom: 0;
+      width: 73%;
+      height: 4px;
+      border-radius: 4px;
+      background: #249fe8;
+    }
+
+    /* Intentionally empty: chat list will be added in a later step. */
+    .empty-space { position: absolute; inset: 202px 0 150px; }
+
+    /* Floating actions on the right, as in the reference. */
+    .floating {
+      position: absolute;
+      right: 30px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 3px 12px #0002;
+    }
+    .camera {
+      bottom: 224px;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #263747;
+    }
+    .camera svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: #f5f7f9;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .compose {
+      bottom: 142px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: #229fe8;
+    }
+    .compose svg {
+      width: 56px;
+      height: 56px;
+      fill: none;
+      stroke: white;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      position: absolute;
+      left: 36px;
+      right: 36px;
+      bottom: max(58px, calc(env(safe-area-inset-bottom) + 48px));
+      height: 130px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      padding: 8px 4px;
+      border-radius: 68px;
+      background: var(--nav);
+      box-shadow: 0 6px 22px #0002;
+    }
+    .nav-item {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      border: 0;
+      border-radius: 52px;
+      background: transparent;
+      color: var(--fg);
+      font-size: 26px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .nav-item.active { color: var(--blue); background: #203c59; }
+    .nav-item svg {
+      width: 48px;
+      height: 48px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav-item .chat-icon { fill: currentColor; stroke: none; }
+    .nav-item .profile-dot {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #69d1e4, #168fc7);
+      color: #d9f5ff;
+      font-size: 20px;
+    }
+
+    .search-panel {
+      position: absolute;
+      z-index: 5;
+      top: 94px;
+      left: 20px;
+      right: 20px;
+      display: none;
+    }
+    .search-panel.open { display: block; }
+    .search-panel input {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid #405365;
+      border-radius: 16px;
+      outline: none;
+      color: var(--fg);
+      background: #263747;
+      font-size: 17px;
+    }
+    .menu {
+      position: absolute;
+      z-index: 6;
+      top: 82px;
+      right: 16px;
+      display: none;
+      min-width: 170px;
+      padding: 8px;
+      border: 1px solid #405365;
+      border-radius: 14px;
+      background: #263747;
+    }
+    .menu.open { display: block; }
+    .menu button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+    }
+
     @media (max-width: 600px) {
-      .topbar { min-height: 50px; gap: 12px; padding: 5px 13px; }
-      .avatar {
-        width: 38px; height: 38px; flex-basis: 38px;
-        border-width: 2px; font-size: 7px; letter-spacing: -.3px;
+      .topbar { height: 53px; gap: 7px; padding: 0 13px; }
+      .profile-avatar {
+        width: 39px; height: 39px; flex-basis: 39px;
+        border-width: 2px; font-size: 6px; letter-spacing: -.3px;
       }
       .brand { font-size: 25px; letter-spacing: -.5px; }
-      .actions { gap: 13px; }
-      .icon-button { width: 30px; height: 38px; }
-      .icon-button svg { width: 23px; height: 23px; stroke-width: 2.5; }
+      .top-actions { gap: 10px; }
+      .icon-btn { width: 29px; height: 36px; }
+      .icon-btn svg { width: 23px; height: 23px; stroke-width: 2.5; }
       .more svg { width: 21px; height: 21px; }
-      .search-panel { padding: 0 13px 12px; }
-      .search-panel input { height: 40px; }
-      .menu { top: 52px; right: 10px; }
+
+      .audio-strip {
+        height: 42px;
+        margin: 6px 12px 0;
+        padding: 0 13px 2px 17px;
+        gap: 11px;
+        border-radius: 24px;
+      }
+      .play-pause { width: 15px; height: 22px; font-size: 19px; }
+      .track { font-size: 17px; }
+      .close-audio { font-size: 24px; }
+      .progress { left: 12px; height: 2px; }
+
+      .empty-space { inset: 101px 0 75px; }
+      .floating { right: 15px; }
+      .camera { bottom: 112px; width: 34px; height: 34px; }
+      .camera svg { width: 19px; height: 19px; stroke-width: 2; }
+      .compose { bottom: 71px; width: 55px; height: 55px; }
+      .compose svg { width: 29px; height: 29px; stroke-width: 2.5; }
+
+      .bottom-nav {
+        left: 18px; right: 18px;
+        bottom: max(29px, calc(env(safe-area-inset-bottom) + 24px));
+        height: 65px;
+        padding: 4px 2px;
+        border-radius: 35px;
+      }
+      .nav-item { gap: 3px; font-size: 13px; border-radius: 28px; }
+      .nav-item svg { width: 25px; height: 25px; stroke-width: 1.9; }
+      .nav-item .profile-dot { width: 26px; height: 26px; font-size: 11px; }
+      .search-panel { top: 48px; left: 10px; right: 10px; }
+      .search-panel input { height: 40px; font-size: 14px; }
+      .menu { top: 42px; right: 8px; }
     }
   </style>
 </head>
 <body>
   <main class="app">
-    <header class="topbar" aria-label="Главная панель">
-      <div class="avatar" aria-label="Аватар профиля">RubUp</div>
+    <header class="topbar" aria-label="Главная панель Telegram">
+      <div class="profile-avatar" aria-label="Аватар RubUp">RubUp</div>
       <h1 class="brand">Telegram</h1>
-      <div class="actions">
-        <button class="icon-button" id="searchToggle" type="button" aria-label="Поиск" aria-expanded="false">
+      <div class="top-actions">
+        <button class="icon-btn" id="searchToggle" type="button" aria-label="Поиск" aria-expanded="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.2"></circle><path d="m16.2 16.2 5 5"></path></svg>
         </button>
-        <button class="icon-button more" id="menuToggle" type="button" aria-label="Меню" aria-expanded="false">
+        <button class="icon-btn more" id="menuToggle" type="button" aria-label="Меню" aria-expanded="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg>
         </button>
       </div>
     </header>
+
+    <section class="audio-strip" aria-label="Панель воспроизведения">
+      <button class="play-pause" id="playPause" type="button" aria-label="Пауза">Ⅱ</button>
+      <div class="track"><strong>FORTUNA 812</strong><span> - ParisLove</span></div>
+      <button class="close-audio" id="closeAudio" type="button" aria-label="Закрыть аудиоплеер">×</button>
+      <div class="progress"></div>
+    </section>
+
+    <div class="empty-space" aria-hidden="true"></div>
+
+    <button class="floating camera" type="button" aria-label="Камера">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h3l1.5-2h7l1.5 2h3A1.5 1.5 0 0 1 21.5 9v9A1.5 1.5 0 0 1 20 19.5H4A1.5 1.5 0 0 1 2.5 18V9A1.5 1.5 0 0 1 4 7.5Z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+    </button>
+    <button class="floating compose" type="button" aria-label="Новое сообщение">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path><circle cx="12" cy="12" r="10"></circle></svg>
+    </button>
+
+    <nav class="bottom-nav" aria-label="Основная навигация">
+      <button class="nav-item active" type="button" aria-current="page">
+        <svg class="chat-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.8A3.8 3.8 0 0 1 6.8 2h10.4A3.8 3.8 0 0 1 21 5.8v7.4a3.8 3.8 0 0 1-3.8 3.8H9l-5.5 4v-4.8A3.8 3.8 0 0 1 3 13.2Z"></path></svg>
+        <span>Чаты</span>
+      </button>
+      <button class="nav-item" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><circle cx="12" cy="9" r="3.1"></circle><path d="M5.5 19a7.3 7.3 0 0 1 13 0"></path></svg>
+        <span>Контакты</span>
+      </button>
+      <button class="nav-item" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4l.7 2.5a8 8 0 0 1 1.8 1l2.4-.8 2 3.5-1.8 1.8a8 8 0 0 1 0 2l1.8 1.8-2 3.5-2.4-.8a8 8 0 0 1-1.8 1L14 20h-4l-.7-2.5a8 8 0 0 1-1.8-1l-2.4.8-2-3.5 1.8-1.8a8 8 0 0 1 0-2L3.1 8.2l2-3.5 2.4.8a8 8 0 0 1 1.8-1Z"></path><circle cx="12" cy="11" r="3"></circle></svg>
+        <span>Настройки</span>
+      </button>
+      <button class="nav-item" type="button">
+        <span class="profile-dot">•</span>
+        <span>Профиль</span>
+      </button>
+    </nav>
+
     <div class="search-panel" id="searchPanel">
       <input type="search" placeholder="Поиск" aria-label="Поиск">
     </div>
@@ -126,22 +400,31 @@
     const searchPanel = document.getElementById('searchPanel');
     const menuToggle = document.getElementById('menuToggle');
     const menu = document.getElementById('menu');
+
     searchToggle.addEventListener('click', () => {
-      const opened = searchPanel.classList.toggle('is-open');
+      const opened = searchPanel.classList.toggle('open');
       searchToggle.setAttribute('aria-expanded', String(opened));
-      menu.classList.remove('is-open');
+      menu.classList.remove('open');
       menuToggle.setAttribute('aria-expanded', 'false');
       if (opened) searchPanel.querySelector('input').focus();
     });
     menuToggle.addEventListener('click', () => {
-      const opened = menu.classList.toggle('is-open');
+      const opened = menu.classList.toggle('open');
       menuToggle.setAttribute('aria-expanded', String(opened));
-      searchPanel.classList.remove('is-open');
+      searchPanel.classList.remove('open');
       searchToggle.setAttribute('aria-expanded', 'false');
     });
     document.getElementById('closeMenu').addEventListener('click', () => {
-      menu.classList.remove('is-open');
+      menu.classList.remove('open');
       menuToggle.setAttribute('aria-expanded', 'false');
+    });
+    document.getElementById('closeAudio').addEventListener('click', () => {
+      document.querySelector('.audio-strip').hidden = true;
+    });
+    document.getElementById('playPause').addEventListener('click', event => {
+      const paused = event.currentTarget.textContent.trim() === 'Ⅱ';
+      event.currentTarget.textContent = paused ? '▶' : 'Ⅱ';
+      event.currentTarget.setAttribute('aria-label', paused ? 'Воспроизвести' : 'Пауза');
     });
   </script>
 </body>
